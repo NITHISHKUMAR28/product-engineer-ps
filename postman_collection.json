@@ -1,0 +1,381 @@
+{
+	"info": {
+		"_postman_id": "c71a3962-d278-4bf8-b80c-7e61f4fa9581",
+		"name": "Durable Reminders API",
+		"description": "Collection for testing Durable Reminders and Follow-Ups with injected clock control, idempotent delivery, and the 20-item verification benchmark.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Core Reminders API",
+			"item": [
+				{
+					"name": "Create Reminder (Asia/Kolkata)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Drink water and stretch\",\n  \"localDateTime\": \"2026-10-01T15:30:00\",\n  \"zone\": \"Asia/Kolkata\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Reminder (America/New_York)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Team catch-up sync\",\n  \"localDateTime\": \"2026-10-01T06:00:00\",\n  \"zone\": \"America/New_York\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Reminder by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Reminders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Reminders by State (SCHEDULED)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders?state=SCHEDULED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "SCHEDULED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Reminders by State (DELIVERED)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders?state=DELIVERED",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders"
+							],
+							"query": [
+								{
+									"key": "state",
+									"value": "DELIVERED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Reminder (Edit Content & Reschedule)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Drink water and stretch [RESCHEDULED]\",\n  \"localDateTime\": \"2026-10-01T16:00:00\",\n  \"zone\": \"Asia/Kolkata\",\n  \"expectedVersion\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Reminder",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/reminders/1/cancel?expectedVersion=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"reminders",
+								"1",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "expectedVersion",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Time & Clock Control (Deterministic Testing)",
+			"item": [
+				{
+					"name": "Get Current Controlled Clock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/clock",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"clock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Controlled Clock Instant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/clock/set?isoInstant=2026-10-01T10:00:00Z",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"clock",
+								"set"
+							],
+							"query": [
+								{
+									"key": "isoInstant",
+									"value": "2026-10-01T10:00:00Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Advance Clock by 10 Minutes",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/clock/advance?minutes=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"clock",
+								"advance"
+							],
+							"query": [
+								{
+									"key": "minutes",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Trigger Scheduler Tick Manually",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/tick",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"tick"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate 1 Temporary Failure (503)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/simulate-failure/temporary?count=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"simulate-failure",
+								"temporary"
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Failure Simulator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/simulate-failure/reset",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"simulate-failure",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Verification Benchmark",
+			"item": [
+				{
+					"name": "Run 20-Item Verification Benchmark",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/test/benchmark/run",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"benchmark",
+								"run"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8085",
+			"type": "string"
+		}
+	]
+}
